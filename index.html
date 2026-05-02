@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chanakya University Fests</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  height:100vh;
+  overflow:hidden;
+  color:white;
+  background:black;
+}
+
+/* 🎬 Background */
+.bg {
+  position:absolute;
+  width:100%;
+  height:100%;
+  background: url('bg.jpg') center/cover no-repeat;
+  transform: scale(1.05);
+  animation: zoomBg 18s ease-in-out infinite alternate;
+}
+
+@keyframes zoomBg {
+  from { transform: scale(1.05); }
+  to { transform: scale(1.12); }
+}
+
+/* overlay */
+.overlay {
+  position:absolute;
+  width:100%;
+  height:100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.45),
+    rgba(0,0,0,0.85)
+  );
+}
+
+/* NAVBAR */
+.nav {
+  position:absolute;
+  top:0;
+  width:100%;
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:3;
+}
+
+.logo {
+  font-weight:700;
+  font-size:1.3rem;
+}
+
+.nav-links span {
+  margin-left:20px;
+  color: rgba(255,255,255,0.6);
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.nav-links span:hover {
+  color:white;
+}
+
+/* layout */
+.container {
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:40px;
+}
+
+/* hero */
+.hero {
+  text-align:center;
+  max-width:900px;
+  margin-bottom:60px;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size:4.5rem;
+  margin-bottom:20px;
+  text-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  opacity:0;
+  transform: translateY(30px);
+  animation: fadeUp 1s ease forwards;
+}
+
+.hero p {
+  font-size:1.2rem;
+  color: rgba(255,255,255,0.75);
+  opacity:0;
+  animation: fadeUp 1s ease forwards;
+  animation-delay:0.3s;
+}
+
+/* panel */
+.panel {
+  width:100%;
+  max-width:1000px;
+  padding:35px;
+  border-radius:20px;
+
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(20px);
+  border:1px solid rgba(255,255,255,0.15);
+
+  display:flex;
+  gap:30px;
+  justify-content:center;
+  flex-wrap:wrap;
+
+  opacity:0;
+  transform: translateY(40px);
+  animation: fadeUp 1s ease forwards;
+  animation-delay:0.6s;
+}
+
+/* cards */
+.card {
+  width:260px;
+  height:170px;
+  padding:20px;
+  border-radius:14px;
+
+  background: rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+
+  cursor:pointer;
+  transition:0.3s;
+  position:relative;
+  overflow:hidden;
+}
+
+/* hover */
+.card:hover {
+  transform: translateY(-8px);
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.25);
+  box-shadow: 0 25px 70px rgba(0,0,0,0.6);
+}
+
+/* glow line */
+.card::before {
+  content:'';
+  height:2px;
+  width:0%;
+  background: linear-gradient(90deg,#F97316,#EC4899);
+  transition:0.4s;
+}
+
+.card:hover::before {
+  width:100%;
+}
+
+/* text */
+.card h2 {
+  font-size:1.5rem;
+  font-weight:600;
+}
+
+.card span {
+  font-size:0.9rem;
+  color: rgba(255,255,255,0.6);
+}
+
+/* arrow */
+.arrow {
+  align-self:flex-end;
+  font-size:1.3rem;
+  opacity:0.6;
+  transition:0.3s;
+}
+
+.card:hover .arrow {
+  transform: translateX(6px);
+}
+
+/* animations */
+@keyframes fadeUp {
+  to {
+    opacity:1;
+    transform: translateY(0);
+  }
+}
+
+/* 🔥 PAGE TRANSITION */
+.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity:0;
+    transform: scale(1.05);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="overlay"></div>
+
+<div class="nav">
+  <div class="logo">Chanakya</div>
+  <div class="nav-links">
+    <span>Fests</span>
+    <span>Explore</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="hero">
+    <h1>Chanakya University Fests</h1>
+    <p>Where innovation, culture, and competition come alive</p>
+  </div>
+
+  <div class="panel">
+
+    <div class="card" onclick="go('srujana')">
+      <div>
+        <h2>Srujana</h2>
+        <span>Cultural Fest</span>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+
+    <div class="card" onclick="go('samyuti')">
+      <div>
+        <h2>Samyuti</h2>
+        <span>Inter-College Fest</span>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+
+    <div class="card" onclick="go('ojas')">
+      <div>
+        <h2>Ojas 2K26</h2>
+        <span>Main Event Portal</span>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function go(type) {
+  document.body.classList.add("fade-out");
+
+  setTimeout(() => {
+    if(type === "srujana") {
+      window.location.href = "srujana_index.html";
+    }
+    else if(type === "samyuti") {
+      window.location.href = "samyuti_index.html";
+    }
+    else {
+      window.location.href = "ojas_index.html";
+    }
+  }, 400);
+}
+</script>
+
+</body>
+</html>

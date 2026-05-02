@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://rinpqlroqxblsmjqcequ.supabase.co; img-src 'self' data: blob:;"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard — Srujana 2K26</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --primary: #8B5CF6; --secondary: #A78BFA; --accent: #F59E0B;
+    --teal: #14B8A6; --green: #10B981; --blue: #3B82F6;
+    --dark-navy: #0D0B1A; --card-bg: #110F1F;
+    --border: rgba(139,92,246,0.15); --text: #f1f5f9; --muted: rgba(255,255,255,0.45);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--dark-navy); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; }
+  nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 3rem; border-bottom:1px solid var(--border); position:sticky; top:0; background:rgba(13,11,26,0.9); backdrop-filter:blur(16px); z-index:100; }
+  .nav-logo { display:flex; align-items:center; gap:0.7rem; font-family:'Montserrat',sans-serif; font-weight:800; font-size:1.25rem; text-decoration:none; color:#fff; }
+  .nav-logo-icon { width:34px; height:34px; background:linear-gradient(135deg,var(--primary),var(--accent)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.9rem; }
+  .nav-logo span { color:var(--accent); }
+  .nav-links { display:flex; align-items:center; gap:2rem; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:0.88rem; font-weight:500; transition:color 0.2s; position:relative; padding-bottom:2px; }
+  .nav-links a.active { color:#fff; }
+  .nav-links a.active::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:2px; }
+  .nav-links a:hover { color:#fff; }
+  .nav-btn { background:rgba(139,92,246,0.1); border:1px solid var(--border); color:var(--muted); padding:0.45rem 1rem; border-radius:6px; font-size:0.83rem; font-weight:500; cursor:pointer; transition:all 0.2s; text-decoration:none; }
+  .nav-btn:hover { color:#fff; }
+
+  .page-header { padding:3.5rem 3rem 2rem; max-width:1200px; margin:0 auto; }
+  .page-header h1 { font-family:'Montserrat',sans-serif; font-weight:900; font-size:3rem; color:#fff; }
+  .page-header h1 span { background:linear-gradient(135deg,var(--primary),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .page-header p { color:var(--muted); margin-top:0.4rem; font-size:0.9rem; }
+
+  .dashboard { max-width:1200px; margin:0 auto; padding:0 3rem 4rem; }
+
+  /* STAT CARDS */
+  .stat-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:2rem; }
+  .stat-card { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:1.5rem; display:flex; align-items:center; gap:1rem; transition:transform 0.2s,border-color 0.2s; }
+  .stat-card:hover { transform:translateY(-2px); border-color:rgba(139,92,246,0.4); }
+  .stat-icon { width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+  .si-purple { background:rgba(139,92,246,0.15); } .si-teal { background:rgba(20,184,166,0.15); }
+  .si-gold { background:rgba(245,158,11,0.15); } .si-green { background:rgba(16,185,129,0.15); }
+  .stat-num { font-family:'Montserrat',sans-serif; font-weight:800; font-size:2rem; line-height:1; }
+  .sn-purple { color:var(--primary); } .sn-teal { color:var(--teal); }
+  .sn-gold { color:var(--accent); } .sn-green { color:var(--green); }
+  .stat-label { color:var(--muted); font-size:0.8rem; margin-top:0.3rem; }
+  .stat-sub { color:rgba(255,255,255,0.25); font-size:0.73rem; margin-top:0.1rem; }
+
+  /* CHARTS */
+  .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.2rem; }
+  .chart-card { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:1.5rem; }
+  .chart-card.wide { grid-column:span 2; }
+  .chart-title { font-family:'Montserrat',sans-serif; font-weight:700; font-size:1rem; color:#fff; margin-bottom:1.2rem; display:flex; align-items:center; gap:0.5rem; }
+  .chart-title span { color:var(--secondary); }
+  .chart-wrap { position:relative; height:250px; }
+  .chart-wrap.tall { height:310px; }
+
+  /* TOP LIST */
+  .top-list { display:flex; flex-direction:column; gap:0.7rem; }
+  .top-item { display:flex; align-items:center; gap:0.9rem; }
+  .top-rank { font-family:'Montserrat',sans-serif; font-weight:800; font-size:1rem; color:var(--muted); width:22px; text-align:right; }
+  .top-bar-wrap { flex:1; }
+  .top-label { font-size:0.83rem; color:var(--text); margin-bottom:0.3rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px; }
+  .top-bar { height:5px; background:rgba(255,255,255,0.07); border-radius:3px; overflow:hidden; }
+  .top-bar-fill { height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:3px; }
+  .top-count { font-size:0.82rem; color:var(--secondary); font-weight:700; width:28px; text-align:right; }
+
+  /* WINNERS TABLE */
+  .winners-table { width:100%; border-collapse:collapse; font-size:0.87rem; }
+  .winners-table th { color:var(--muted); font-weight:600; text-align:left; padding:0.7rem 1.1rem; border-bottom:1px solid var(--border); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.8px; }
+  .winners-table td { padding:0.85rem 1.1rem; border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text); }
+  .winners-table tr:hover td { background:rgba(139,92,246,0.04); }
+  .pos-1 { color:#FFD700; font-weight:700; } .pos-2 { color:#C0C0C0; font-weight:700; } .pos-3 { color:#CD7F32; font-weight:700; }
+  .school-pill { background:rgba(139,92,246,0.1); border-radius:4px; padding:0.2rem 0.6rem; font-size:0.78rem; color:var(--muted); }
+
+  /* REQUESTS */
+  .requests-section { background:var(--card-bg); border:1px solid rgba(245,158,11,0.3); border-radius:14px; padding:1.5rem; margin-bottom:1.5rem; }
+  .requests-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem; flex-wrap:wrap; gap:0.7rem; }
+  .requests-title { font-family:'Montserrat',sans-serif; font-weight:700; font-size:1rem; color:#fff; display:flex; align-items:center; gap:0.6rem; }
+  .pending-badge { background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#F59E0B; border-radius:2rem; font-size:0.75rem; font-weight:700; padding:0.2rem 0.7rem; }
+  .req-table { width:100%; border-collapse:collapse; font-size:0.87rem; }
+  .req-table th { color:var(--muted); font-weight:600; text-align:left; padding:0.7rem 1rem; border-bottom:1px solid var(--border); font-size:0.73rem; text-transform:uppercase; letter-spacing:0.8px; }
+  .req-table td { padding:0.9rem 1rem; border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text); vertical-align:middle; }
+  .req-table tr:last-child td { border-bottom:none; }
+  .req-table tr:hover td { background:rgba(139,92,246,0.04); }
+  .status-pill { display:inline-block; padding:0.25rem 0.7rem; border-radius:2rem; font-size:0.75rem; font-weight:700; white-space:nowrap; }
+  .status-pending  { background:rgba(245,158,11,0.15); color:#F59E0B; border:1px solid rgba(245,158,11,0.3); }
+  .status-approved { background:rgba(16,185,129,0.15); color:#10B981; border:1px solid rgba(16,185,129,0.3); }
+  .status-denied   { background:rgba(239,68,68,0.15);  color:#EF4444; border:1px solid rgba(239,68,68,0.3); }
+  .req-actions { display:flex; gap:0.5rem; }
+  .btn-approve,.btn-deny { padding:0.35rem 0.85rem; border-radius:6px; font-size:0.8rem; font-weight:600; cursor:pointer; border:none; font-family:'Inter',sans-serif; transition:all 0.15s; }
+  .btn-approve { background:rgba(16,185,129,0.2); color:#10B981; border:1px solid rgba(16,185,129,0.3); }
+  .btn-approve:hover { background:rgba(16,185,129,0.35); }
+  .btn-deny { background:rgba(239,68,68,0.15); color:#EF4444; border:1px solid rgba(239,68,68,0.25); }
+  .btn-deny:hover { background:rgba(239,68,68,0.28); }
+  .no-requests { color:var(--muted); font-size:0.9rem; text-align:center; padding:2rem; }
+  .req-filter-tabs { display:flex; gap:0.5rem; }
+  .req-tab { padding:0.3rem 0.9rem; border-radius:2rem; font-size:0.8rem; font-weight:600; cursor:pointer; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'Inter',sans-serif; transition:all 0.15s; }
+  .req-tab.active { background:rgba(139,92,246,0.15); border-color:rgba(139,92,246,0.4); color:var(--secondary); }
+
+  /* DOWNLOAD */
+  .download-section { background:var(--card-bg); border:1px solid rgba(59,130,246,0.3); border-radius:14px; padding:1.5rem; margin-bottom:1.5rem; }
+  .download-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.4rem; flex-wrap:wrap; gap:0.7rem; }
+  .download-title { font-family:'Montserrat',sans-serif; font-weight:700; font-size:1rem; color:#fff; }
+  .dl-all-btn { background:linear-gradient(135deg,var(--primary),var(--accent)); color:#fff; border:none; border-radius:8px; padding:0.55rem 1.2rem; font-size:0.85rem; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s; box-shadow:0 4px 16px rgba(139,92,246,0.25); }
+  .dl-all-btn:hover { transform:translateY(-1px); } .dl-all-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+  .events-dl-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:0.8rem; }
+  .event-dl-card { background:rgba(139,92,246,0.04); border:1px solid var(--border); border-radius:10px; padding:1rem 1.1rem; display:flex; justify-content:space-between; align-items:center; gap:0.8rem; transition:border-color 0.2s; }
+  .event-dl-card:hover { border-color:rgba(139,92,246,0.3); }
+  .event-dl-info { flex:1; min-width:0; }
+  .event-dl-name { font-size:0.88rem; font-weight:600; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .event-dl-meta { font-size:0.76rem; color:var(--muted); margin-top:0.2rem; }
+  .event-dl-count { background:rgba(139,92,246,0.12); border:1px solid rgba(139,92,246,0.25); color:var(--secondary); border-radius:2rem; font-size:0.72rem; font-weight:700; padding:0.15rem 0.55rem; white-space:nowrap; }
+  .btn-dl-event { background:rgba(139,92,246,0.12); border:1px solid rgba(139,92,246,0.3); color:var(--secondary); border-radius:7px; padding:0.4rem 0.85rem; font-size:0.8rem; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.15s; white-space:nowrap; }
+  .btn-dl-event:hover { background:rgba(139,92,246,0.22); } .btn-dl-event:disabled { opacity:0.4; cursor:not-allowed; }
+  .dl-empty { color:var(--muted); font-size:0.88rem; padding:1.5rem; text-align:center; }
+
+  .toast { position:fixed; bottom:2rem; right:2rem; padding:1rem 1.5rem; border-radius:10px; font-size:0.9rem; font-weight:500; z-index:999; transform:translateY(120px); opacity:0; transition:all 0.3s; backdrop-filter:blur(8px); }
+  .toast.show { transform:translateY(0); opacity:1; }
+  .toast.success { background:rgba(16,185,129,0.9); color:#fff; }
+  .toast.error { background:rgba(239,68,68,0.9); color:#fff; }
+  .loading { color:var(--muted); text-align:center; padding:2rem; font-size:0.9rem; }
+  footer { border-top:1px solid var(--border); padding:2rem 3rem; text-align:center; color:var(--muted); font-size:0.82rem; }
+  footer span { color:var(--accent); }
+  @media(max-width:900px){ .stat-row{grid-template-columns:1fr 1fr;} .chart-grid{grid-template-columns:1fr;} .chart-card.wide{grid-column:span 1;} nav,.page-header,.dashboard,footer{padding-left:1.5rem;padding-right:1.5rem;} }
+  @media(max-width:500px){ .stat-row{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<nav>
+  <a href="srujana_index.html" class="nav-logo">
+    <div class="nav-logo-icon">🎨</div>
+    Srujana <span>2K26</span>
+  </a>
+  <div class="nav-links">
+    <a href="srujana_index.html">Home</a>
+    <a href="srujana_events.html">Events</a>
+    <a href="srujana_dashboard.html" class="active">Dashboard</a>
+    <a href="srujana_add-event.html">Add Event</a>
+    <a href="#" onclick="logout()" class="nav-btn">Logout</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Analytics <span>Dashboard</span></h1>
+  <p>Srujana 2K26 — participation insights across all schools and cultural competitions</p>
+</div>
+
+<div class="dashboard">
+  <!-- PENDING REQUESTS -->
+  <div class="requests-section">
+    <div class="requests-header">
+      <div class="requests-title">🎟️ Registration Requests <span class="pending-badge" id="pending-count">⏳ Loading</span></div>
+      <div class="req-filter-tabs">
+        <button class="req-tab active" id="tab-pending"   onclick="filterRequests('pending')">Pending</button>
+        <button class="req-tab"        id="tab-approved"  onclick="filterRequests('approved')">Approved</button>
+        <button class="req-tab"        id="tab-denied"    onclick="filterRequests('denied')">Denied</button>
+        <button class="req-tab"        id="tab-all"       onclick="filterRequests('all')">All</button>
+      </div>
+    </div>
+    <div id="requests-table-wrap"><div class="loading">Loading requests...</div></div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-icon si-purple">🎭</div>
+      <div><div class="stat-num sn-purple" id="d-events">—</div><div class="stat-label">Total Events</div><div class="stat-sub">Across 6 schools</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon si-teal">👥</div>
+      <div><div class="stat-num sn-teal" id="d-students">—</div><div class="stat-label">Unique Participants</div><div class="stat-sub">Registered students</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon si-gold">📋</div>
+      <div><div class="stat-num sn-gold" id="d-regs">—</div><div class="stat-label">Total Registrations</div><div class="stat-sub">Across all events</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon si-green">🏆</div>
+      <div><div class="stat-num sn-green" id="d-winners">—</div><div class="stat-label">Prize Winners</div><div class="stat-sub">Gold, Silver, Bronze</div></div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">Participation by <span>School</span></div>
+      <div class="chart-wrap"><canvas id="chart-school"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Events by <span>Date</span></div>
+      <div class="chart-wrap"><canvas id="chart-date"></canvas></div>
+    </div>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">Event <span>Type</span> Split</div>
+      <div class="chart-wrap"><canvas id="chart-type"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Top Events by <span>Registrations</span></div>
+      <div class="chart-wrap tall" id="top-events-list"><div class="loading">Loading...</div></div>
+    </div>
+  </div>
+
+  <!-- WINNERS -->
+  <div class="chart-card wide" style="margin-bottom:1.2rem">
+    <div class="chart-title">🏆 <span>Winners</span> List</div>
+    <div id="winners-table-wrap"><div class="loading">Loading...</div></div>
+  </div>
+
+  <!-- DOWNLOAD -->
+  <div class="download-section">
+    <div class="download-header">
+      <div class="download-title">📥 Download Participants</div>
+      <button class="dl-all-btn" id="dl-all-btn" onclick="downloadAllUpcoming()">⬇️ Download All Upcoming Events</button>
+    </div>
+    <div class="events-dl-grid" id="events-dl-grid"><div class="loading">Loading events...</div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<footer>Srujana 2K26 — <span>Chanakya University</span> · Cultural Fest · Analytics Portal</footer>
+
+<script>
+const SUPA_URL = 'https://rinpqlroqxblsmjqcequ.supabase.co/rest/v1';
+const KEY = 'sb_publishable_aEFZNFjFYQ21Eyxr3oORxQ_7Tdzz13F';
+const H = { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` };
+const HW = { ...H, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' };
+const P = 'srujana_';
+const SESSION_KEY = 'srujana_session';
+
+const _session = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
+if (!_session || _session.role !== 'admin') location.replace('srujana_login.html');
+function logout() { sessionStorage.removeItem(SESSION_KEY); location.href = 'srujana_login.html'; }
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+async function get(table, params = '') {
+  const r = await fetch(`${SUPA_URL}/${table}${params}`, { headers: H });
+  return r.json();
+}
+
+const COLORS = ['#8B5CF6','#F59E0B','#C084FC','#3B82F6','#14B8A6','#10B981'];
+const chartDefaults = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: {
+    x: { ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.06)' } },
+    y: { ticks: { color: 'rgba(255,255,255,0.4)' }, grid: { color: 'rgba(255,255,255,0.06)' } }
+  }
+};
+
+/* ── REQUESTS ── */
+let allRequests = [];
+let currentFilter = 'pending';
+
+async function loadRequests() {
+  try {
+    allRequests = await get(P + 'registration_requests', '?order=submitted_at.desc');
+    const pending = allRequests.filter(r => r.status === 'pending').length;
+    document.getElementById('pending-count').textContent = `${pending} Pending`;
+    renderRequests(currentFilter);
+  } catch {
+    document.getElementById('requests-table-wrap').innerHTML = '<div class="no-requests">⚠️ Could not load requests.</div>';
+  }
+}
+
+function filterRequests(status) {
+  currentFilter = status;
+  ['pending','approved','denied','all'].forEach(s => document.getElementById('tab-' + s).classList.toggle('active', s === status));
+  renderRequests(status);
+}
+
+function renderRequests(status) {
+  const filtered = status === 'all' ? allRequests : allRequests.filter(r => r.status === status);
+  const wrap = document.getElementById('requests-table-wrap');
+  if (!filtered.length) { wrap.innerHTML = `<div class="no-requests">No ${status === 'all' ? '' : status} requests found.</div>`; return; }
+  wrap.innerHTML = `
+    <table class="req-table">
+      <thead><tr><th>Name</th><th>Email</th><th>Event</th><th>School</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>${filtered.map(r => `
+        <tr>
+          <td><strong>${r.name}</strong></td>
+          <td style="color:var(--muted)">${r.email}</td>
+          <td>${r.event_name || '—'}</td>
+          <td style="color:var(--muted);font-size:0.8rem">${r.school ? r.school.replace('School of ','') : '—'}</td>
+          <td style="color:var(--muted);font-size:0.8rem">${r.submitted_at ? new Date(r.submitted_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—'}</td>
+          <td><span class="status-pill status-${r.status}">${r.status.charAt(0).toUpperCase()+r.status.slice(1)}</span></td>
+          <td>${r.status === 'pending' ? `<div class="req-actions"><button class="btn-approve" onclick="reviewRequest(${r.request_id},'approved')">✓ Approve</button><button class="btn-deny" onclick="reviewRequest(${r.request_id},'denied')">✕ Deny</button></div>` : `<span style="color:var(--muted);font-size:0.8rem">Reviewed</span>`}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+async function reviewRequest(requestId, newStatus) {
+  try {
+    const res = await fetch(`${SUPA_URL}/${P}registration_requests?request_id=eq.${requestId}`, {
+      method: 'PATCH', headers: HW,
+      body: JSON.stringify({ status: newStatus, reviewed_at: new Date().toISOString() })
+    });
+    if (res.ok) {
+      if (newStatus === 'approved') {
+        const req = allRequests.find(r => r.request_id === requestId);
+        if (req) await autoAddParticipant(req);
+      }
+      showToast(newStatus === 'approved' ? '✅ Request approved & participant added!' : '✅ Request denied.');
+      await loadRequests();
+    } else { showToast('❌ Failed to update.', 'error'); }
+  } catch { showToast('❌ Connection error.', 'error'); }
+}
+
+async function autoAddParticipant(req) {
+  const partRes = await fetch(`${SUPA_URL}/${P}participants?email=ilike.${encodeURIComponent(req.email)}&select=participant_id`, { headers: H });
+  const existing = await partRes.json();
+  let participantId;
+  if (existing.length) {
+    participantId = existing[0].participant_id;
+  } else {
+    const ins = await fetch(`${SUPA_URL}/${P}participants`, {
+      method: 'POST',
+      headers: { ...HW, 'Prefer': 'return=representation' },
+      body: JSON.stringify({ name: req.name, email: req.email, phone: req.phone || '', school: req.school || '' })
+    });
+    if (ins.ok) { const newP = await ins.json(); participantId = newP[0]?.participant_id; }
+  }
+  if (participantId && req.event_id) {
+    await fetch(`${SUPA_URL}/${P}registrations`, {
+      method: 'POST', headers: HW,
+      body: JSON.stringify({ participant_id: participantId, event_id: req.event_id })
+    });
+  }
+}
+
+/* ── DASHBOARD ── */
+async function loadDashboard() {
+  const [events, participants, regs, results] = await Promise.all([
+    get(P + 'events', '?select=*'),
+    get(P + 'participants', '?select=participant_id,school'),
+    get(P + 'registrations', '?select=registration_id,event_id,participant_id'),
+    get(P + 'results', '?select=*')
+  ]);
+
+  document.getElementById('d-events').textContent = events.length;
+  document.getElementById('d-students').textContent = participants.length;
+  document.getElementById('d-regs').textContent = regs.length;
+  document.getElementById('d-winners').textContent = results.length;
+
+  // School chart
+  const schoolCount = {};
+  regs.forEach(r => {
+    const p = participants.find(p => p.participant_id === r.participant_id);
+    if (p) { const s = (p.school || 'Unknown').replace('School of ','').replace(' & Social Sciences',''); schoolCount[s] = (schoolCount[s]||0)+1; }
+  });
+  new Chart(document.getElementById('chart-school'), {
+    type: 'bar',
+    data: { labels: Object.keys(schoolCount), datasets: [{ data: Object.values(schoolCount), backgroundColor: COLORS, borderRadius: 6, borderSkipped: false }] },
+    options: chartDefaults
+  });
+
+  // Date chart
+  const dateCount = {};
+  events.forEach(e => { if (e.date) dateCount[e.date] = (dateCount[e.date]||0)+1; });
+  new Chart(document.getElementById('chart-date'), {
+    type: 'bar',
+    data: { labels: Object.keys(dateCount), datasets: [{ data: Object.values(dateCount), backgroundColor: '#8B5CF6', borderRadius: 6 }] },
+    options: chartDefaults
+  });
+
+  // Type doughnut
+  const typeCount = {};
+  events.forEach(e => { const t = e.event_type || 'Solo'; typeCount[t] = (typeCount[t]||0)+1; });
+  new Chart(document.getElementById('chart-type'), {
+    type: 'doughnut',
+    data: { labels: Object.keys(typeCount), datasets: [{ data: Object.values(typeCount), backgroundColor: COLORS, borderWidth: 0, hoverOffset: 8 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'rgba(255,255,255,0.5)', font: { size: 12 } } } } }
+  });
+
+  // Top events
+  const eventRegCount = {};
+  regs.forEach(r => { eventRegCount[r.event_id] = (eventRegCount[r.event_id]||0)+1; });
+  const topEvents = events.map(e => ({ name: e.event_name, count: eventRegCount[e.event_id] || 0 })).sort((a,b) => b.count-a.count).slice(0,8);
+  const maxCount = topEvents[0]?.count || 1;
+  document.getElementById('top-events-list').innerHTML = `<div class="top-list">${topEvents.map((e,i) => `
+    <div class="top-item">
+      <div class="top-rank">${i+1}</div>
+      <div class="top-bar-wrap">
+        <div class="top-label">${e.name}</div>
+        <div class="top-bar"><div class="top-bar-fill" style="width:${(e.count/maxCount*100).toFixed(0)}%"></div></div>
+      </div>
+      <div class="top-count">${e.count}</div>
+    </div>`).join('')}</div>`;
+
+  // Winners — srujana_results has: result_id, event_name, position, winner_name, school
+  if (!results.length) { document.getElementById('winners-table-wrap').innerHTML = '<div class="loading">No results data yet.</div>'; return; }
+  document.getElementById('winners-table-wrap').innerHTML = `
+    <table class="winners-table">
+      <thead><tr><th>Position</th><th>Winner</th><th>Event</th><th>School</th></tr></thead>
+      <tbody>${results.slice(0,30).map(r => {
+        const posClass = r.position === '1st' ? 'pos-1' : r.position === '2nd' ? 'pos-2' : 'pos-3';
+        const medal = r.position === '1st' ? '🥇' : r.position === '2nd' ? '🥈' : '🥉';
+        return `<tr>
+          <td class="${posClass}">${medal} ${r.position}</td>
+          <td>${r.winner_name || '—'}</td>
+          <td>${r.event_name || '—'}</td>
+          <td><span class="school-pill">${(r.school||'').replace('School of ','')}</span></td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>`;
+}
+
+/* ── DOWNLOAD ── */
+let allEventsCache = [];
+
+async function loadDownloadSection() {
+  const today = new Date().toISOString().split('T')[0];
+  try {
+    const events = await get(P + 'events', `?select=event_id,event_name,date,venue,event_type&date=gte.${today}&order=date.asc`);
+    allEventsCache = events;
+    const regs = await get(P + 'registrations', '?select=event_id,participant_id');
+    const regCount = {};
+    regs.forEach(r => { regCount[r.event_id] = (regCount[r.event_id]||0)+1; });
+    const grid = document.getElementById('events-dl-grid');
+    if (!events.length) { grid.innerHTML = '<div class="dl-empty">No upcoming events found.</div>'; document.getElementById('dl-all-btn').disabled = true; return; }
+    grid.innerHTML = events.map(e => `
+      <div class="event-dl-card">
+        <div class="event-dl-info">
+          <div class="event-dl-name" title="${e.event_name}">${e.event_name}</div>
+          <div class="event-dl-meta">📅 ${e.date||'TBD'} &nbsp;·&nbsp; 📍 ${e.venue||'TBD'}</div>
+        </div>
+        <span class="event-dl-count">${regCount[e.event_id]||0} registered</span>
+        <button class="btn-dl-event" onclick="downloadEventParticipants(${e.event_id},'${e.event_name.replace(/'/g,"\\'")}',this)">⬇️ Excel</button>
+      </div>`).join('');
+  } catch { document.getElementById('events-dl-grid').innerHTML = '<div class="dl-empty">⚠️ Failed to load events.</div>'; }
+}
+
+async function getParticipantsForEvent(eventId) {
+  const regs = await get(P + 'registrations', `?event_id=eq.${eventId}&select=participant_id`);
+  if (!regs.length) return [];
+  const ids = regs.map(r => r.participant_id).join(',');
+  return get(P + 'participants', `?participant_id=in.(${ids})&select=name,email,phone,school`);
+}
+
+async function downloadEventParticipants(eventId, eventName, btn) {
+  btn.disabled = true; btn.textContent = '⏳ Preparing...';
+  try {
+    const participants = await getParticipantsForEvent(eventId);
+    const event = allEventsCache.find(e => e.event_id === eventId) || {};
+    if (!participants.length) { showToast(`⚠️ No participants for "${eventName}" yet.`, 'error'); btn.disabled = false; btn.textContent = '⬇️ Excel'; return; }
+    const wb = XLSX.utils.book_new();
+    const aoa = [
+      ['Srujana 2K26 — Participant List'], [],
+      ['Event', eventName], ['Date', event.date||'TBD'], ['Venue', event.venue||'TBD'], ['Type', event.event_type||''], ['Total', participants.length], [],
+      ['S.No','Name','Email','Phone','School'],
+      ...participants.map((p,i) => [i+1, p.name||'', p.email||'', p.phone||'', p.school||''])
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws['!cols'] = [{wch:6},{wch:28},{wch:38},{wch:15},{wch:40}];
+    XLSX.utils.book_append_sheet(wb, ws, eventName.slice(0,31));
+    XLSX.writeFile(wb, `Srujana_2K26_${eventName.replace(/[^a-z0-9]/gi,'_')}_Participants.xlsx`);
+    showToast(`✅ Downloaded ${participants.length} participants for "${eventName}"`);
+  } catch { showToast('❌ Download failed.', 'error'); }
+  btn.disabled = false; btn.textContent = '⬇️ Excel';
+}
+
+async function downloadAllUpcoming() {
+  const btn = document.getElementById('dl-all-btn');
+  btn.disabled = true; btn.textContent = '⏳ Preparing...';
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const events = await get(P + 'events', `?select=*&date=gte.${today}&order=date.asc`);
+    const regs = await get(P + 'registrations', '?select=registration_id,event_id,participant_id');
+    const participants = await get(P + 'participants', '?select=*');
+    const partMap = {}; participants.forEach(p => partMap[p.participant_id] = p);
+    const wb = XLSX.utils.book_new();
+    const summaryRows = [];
+    events.forEach(ev => {
+      regs.filter(r => r.event_id === ev.event_id).forEach(r => {
+        const p = partMap[r.participant_id] || {};
+        summaryRows.push({ 'Event':ev.event_name, 'Date':ev.date||'TBD', 'Venue':ev.venue||'TBD', 'Type':ev.event_type||'', 'Name':p.name||'', 'Email':p.email||'', 'Phone':p.phone||'', 'School':p.school||'' });
+      });
+    });
+    const wsSummary = XLSX.utils.json_to_sheet(summaryRows.length ? summaryRows : [{ Note: 'No registrations yet.' }]);
+    wsSummary['!cols'] = [{wch:28},{wch:12},{wch:22},{wch:12},{wch:26},{wch:36},{wch:14},{wch:36}];
+    XLSX.utils.book_append_sheet(wb, wsSummary, 'All Events Summary');
+    events.forEach(ev => {
+      const evRegs = regs.filter(r => r.event_id === ev.event_id);
+      const aoa = [['Srujana 2K26 — Participant List'],[],['Event',ev.event_name],['Date',ev.date||'TBD'],['Venue',ev.venue||'TBD'],['Type',ev.event_type||''],['Total',evRegs.length],[],['S.No','Name','Email','Phone','School'],...evRegs.map((r,i) => { const p=partMap[r.participant_id]||{}; return [i+1,p.name||'',p.email||'',p.phone||'',p.school||'']; })];
+      if (!evRegs.length) aoa.push(['','No participants yet.']);
+      const ws = XLSX.utils.aoa_to_sheet(aoa);
+      ws['!cols'] = [{wch:6},{wch:26},{wch:36},{wch:14},{wch:36}];
+      XLSX.utils.book_append_sheet(wb, ws, ev.event_name.replace(/[^a-z0-9 ]/gi,'').trim().slice(0,31) || `Event_${ev.event_id}`);
+    });
+    XLSX.writeFile(wb, 'Srujana_2K26_All_Upcoming_Participants.xlsx');
+    showToast(`✅ Downloaded all ${events.length} upcoming events!`);
+  } catch { showToast('❌ Download failed.', 'error'); }
+  btn.disabled = false; btn.textContent = '⬇️ Download All Upcoming Events';
+}
+
+loadRequests();
+loadDashboard();
+loadDownloadSection();
+</script>
+</body>
+</html>

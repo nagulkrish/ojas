@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://rinpqlroqxblsmjqcequ.supabase.co; img-src 'self' data: blob:;"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — Srujana 2K26</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --primary: #8B5CF6; --secondary: #A78BFA; --accent: #F59E0B;
+    --dark-navy: #0D0B1A; --card-bg: #110F1F;
+    --border: rgba(139,92,246,0.15); --text: #f1f5f9; --muted: rgba(255,255,255,0.45);
+    --success: #10B981; --error: #EF4444;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--dark-navy); color: var(--text);
+    font-family: 'Inter', sans-serif; min-height: 100vh;
+    display: flex; flex-direction: column;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 20% 80%, rgba(139,92,246,0.1) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(245,158,11,0.07) 0%, transparent 60%);
+  }
+  nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 3rem; border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.7rem;
+    font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.25rem;
+    text-decoration: none; color: #fff;
+  }
+  .nav-logo-icon {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-back { color: var(--muted); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+  .nav-back:hover { color: var(--secondary); }
+
+  .login-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+  .login-box { width: 100%; max-width: 440px; }
+  .login-header { text-align: center; margin-bottom: 2rem; }
+  .login-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; margin: 0 auto 1.2rem;
+    box-shadow: 0 8px 32px rgba(139,92,246,0.3);
+  }
+  .login-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 2.2rem; color: #fff; margin-bottom: 0.3rem; }
+  .login-title span { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .login-sub { color: var(--muted); font-size: 0.9rem; }
+
+  .role-tabs {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    background: rgba(139,92,246,0.05); border: 1px solid var(--border);
+    border-radius: 12px; padding: 4px; margin-bottom: 1.5rem; gap: 4px;
+  }
+  .role-tab {
+    padding: 0.9rem; text-align: center; cursor: pointer;
+    background: transparent; transition: all 0.2s; border: none;
+    font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600; color: var(--muted);
+    border-radius: 8px; display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  }
+  .role-tab-icon { font-size: 1.3rem; }
+  .role-tab.active { background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(245,158,11,0.2)); color: #fff; border: 1px solid rgba(139,92,246,0.3); }
+
+  .form-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.2rem; }
+  .form-group label { font-size: 0.78rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; }
+  .form-group input {
+    background: rgba(139,92,246,0.05); border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.85rem 1.1rem;
+    color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; transition: all 0.2s;
+  }
+  .form-group input:focus { border-color: var(--primary); background: rgba(139,92,246,0.08); }
+  .form-group input::placeholder { color: rgba(255,255,255,0.25); }
+
+  .info-box {
+    background: rgba(139,92,246,0.07); border: 1px solid rgba(139,92,246,0.2);
+    border-radius: 10px; padding: 1rem 1.1rem;
+    font-size: 0.84rem; color: var(--muted); line-height: 1.65; margin-bottom: 1.2rem;
+  }
+  .info-box strong { color: var(--secondary); }
+
+  .btn-login {
+    width: 100%; background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff; border: none; border-radius: 10px; padding: 0.95rem;
+    font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: all 0.2s; margin-top: 0.3rem; box-shadow: 0 4px 20px rgba(139,92,246,0.3);
+  }
+  .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(139,92,246,0.4); }
+  .btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .error-msg {
+    background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);
+    color: #fca5a5; border-radius: 8px; padding: 0.75rem 1rem;
+    font-size: 0.85rem; margin-bottom: 1rem; display: none;
+  }
+  .error-msg.show { display: block; }
+
+  footer { border-top: 1px solid var(--border); padding: 1.5rem 3rem; text-align: center; color: var(--muted); font-size: 0.82rem; }
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+<nav>
+  <a href="srujana_index.html" class="nav-logo">
+    <div class="nav-logo-icon">🎨</div>
+    Srujana <span>2K26</span>
+  </a>
+  <a href="srujana_index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="login-wrap">
+  <div class="login-box">
+    <div class="login-header">
+      <div class="login-icon">🔑</div>
+      <div class="login-title">Welcome <span>Back</span></div>
+      <p class="login-sub">Select your role to continue</p>
+    </div>
+
+    <div class="role-tabs">
+      <button class="role-tab active" id="tab-admin" onclick="switchRole('admin')">
+        <span class="role-tab-icon">🛡️</span> Admin
+      </button>
+      <button class="role-tab" id="tab-participant" onclick="switchRole('participant')">
+        <span class="role-tab-icon">🎓</span> Participant
+      </button>
+      <button class="role-tab" id="tab-register" onclick="switchRole('register')">
+        <span class="role-tab-icon">🎟️</span> Register
+      </button>
+    </div>
+
+    <div id="form-admin" class="form-card">
+      <div class="error-msg" id="admin-error">Incorrect password. Please try again.</div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="admin-user" value="admin" readonly/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="admin-pass" placeholder="Enter admin password" onkeypress="if(event.key==='Enter') adminLogin()"/>
+      </div>
+      <button class="btn-login" id="admin-btn" onclick="adminLogin()">Login as Admin →</button>
+    </div>
+
+    <div id="form-register" class="form-card" style="display:none">
+      <div class="info-box">Want to participate in a Srujana event? Fill the registration form. Your request will be reviewed by the admin.</div>
+      <a href="srujana_register.html" style="display:block;text-align:center;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;border-radius:10px;padding:0.95rem;font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(139,92,246,0.3);transition:all 0.2s;">
+        Go to Registration Form →
+      </a>
+    </div>
+
+    <div id="form-participant" class="form-card" style="display:none">
+      <div class="info-box">Enter your <strong>university email</strong> to view your registered events and results. No password needed.</div>
+      <div class="error-msg" id="participant-error">No student found with that email. Check and try again.</div>
+      <div class="form-group">
+        <label>University Email</label>
+        <input type="email" id="participant-email" placeholder="name.course25@chanakyauniversity.edu.in" onkeypress="if(event.key==='Enter') participantLogin()"/>
+      </div>
+      <button class="btn-login" id="participant-btn" onclick="participantLogin()">View My Results →</button>
+    </div>
+  </div>
+</div>
+
+<footer>Srujana 2K26 — <span>Chanakya University</span> · Cultural Fest</footer>
+
+<script>
+const ADMIN_PASSWORD = 'Admin@1234';
+const SUPA_URL = 'https://rinpqlroqxblsmjqcequ.supabase.co/rest/v1';
+const KEY = 'sb_publishable_aEFZNFjFYQ21Eyxr3oORxQ_7Tdzz13F';
+const headers = { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` };
+const SESSION_KEY = 'srujana_session';
+const PREFIX = 'srujana_';
+
+const session = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
+if (session) {
+  if (session.role === 'admin') location.replace('srujana_dashboard.html');
+  else location.replace('srujana_student.html?email=' + encodeURIComponent(session.email));
+}
+
+function switchRole(role) {
+  ['admin','participant','register'].forEach(r => {
+    document.getElementById('tab-' + r).classList.toggle('active', r === role);
+    document.getElementById('form-' + r).style.display = r === role ? 'block' : 'none';
+  });
+  document.getElementById('admin-error').classList.remove('show');
+  document.getElementById('participant-error').classList.remove('show');
+}
+
+function adminLogin() {
+  const pass = document.getElementById('admin-pass').value;
+  const btn = document.getElementById('admin-btn');
+  const err = document.getElementById('admin-error');
+  if (pass !== ADMIN_PASSWORD) {
+    err.classList.add('show');
+    document.getElementById('admin-pass').value = '';
+    document.getElementById('admin-pass').focus();
+    return;
+  }
+  err.classList.remove('show');
+  btn.disabled = true; btn.textContent = 'Logging in...';
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ role: 'admin', name: 'Admin' }));
+  location.replace('srujana_dashboard.html');
+}
+
+async function participantLogin() {
+  const email = document.getElementById('participant-email').value.trim().toLowerCase();
+  const btn = document.getElementById('participant-btn');
+  const err = document.getElementById('participant-error');
+  if (!email) return;
+  err.classList.remove('show');
+  btn.disabled = true; btn.textContent = 'Looking up...';
+  try {
+    const res = await fetch(`${SUPA_URL}/${PREFIX}participants?email=ilike.${encodeURIComponent(email)}&select=name,email`, { headers });
+    const data = await res.json();
+    if (!data.length) { err.classList.add('show'); btn.disabled = false; btn.textContent = 'View My Results →'; return; }
+    const p = data[0];
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ role: 'participant', name: p.name, email: p.email }));
+    location.replace('srujana_student.html?email=' + encodeURIComponent(p.email));
+  } catch {
+    err.textContent = 'Connection error. Please try again.';
+    err.classList.add('show'); btn.disabled = false; btn.textContent = 'View My Results →';
+  }
+}
+</script>
+</body>
+</html>

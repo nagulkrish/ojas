@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://rinpqlroqxblsmjqcequ.supabase.co; img-src 'self' data: blob:;"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Register — Srujana 2K26</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --primary: #8B5CF6; --secondary: #A78BFA; --accent: #F59E0B;
+    --dark-navy: #0D0B1A; --card-bg: #110F1F;
+    --border: rgba(139,92,246,0.15); --text: #f1f5f9; --muted: rgba(255,255,255,0.45);
+    --success: #10B981; --error: #EF4444; --warn: #F59E0B;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--dark-navy); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh;
+    background-image: radial-gradient(ellipse 60% 40% at 90% 10%, rgba(139,92,246,0.07) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 10% 90%, rgba(245,158,11,0.05) 0%, transparent 60%);
+  }
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; border-bottom: 1px solid var(--border); background: rgba(13,11,26,0.9); backdrop-filter: blur(16px); }
+  .nav-logo { display: flex; align-items: center; gap: 0.7rem; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.25rem; text-decoration: none; color: #fff; }
+  .nav-logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+  .nav-logo span { color: var(--accent); }
+  .nav-back { color: var(--muted); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+  .nav-back:hover { color: var(--secondary); }
+  .page-wrap { max-width: 620px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+  .page-header { text-align: center; margin-bottom: 2.5rem; }
+  .page-icon { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 1.2rem; box-shadow: 0 8px 32px rgba(139,92,246,0.3); }
+  .page-header h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 2.2rem; color: #fff; margin-bottom: 0.4rem; }
+  .page-header h1 span { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .page-header p { color: var(--muted); font-size: 0.9rem; }
+  .form-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; }
+  .section-label { display: flex; align-items: center; gap: 0.6rem; font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.2rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border); }
+  .section-label-icon { width: 28px; height: 28px; border-radius: 7px; background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(245,158,11,0.2)); border: 1px solid rgba(139,92,246,0.25); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group.span-2 { grid-column: span 2; }
+  .form-group label { font-size: 0.75rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; }
+  .form-group input, .form-group select { background: rgba(139,92,246,0.04); border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem 1rem; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem; outline: none; transition: all 0.2s; width: 100%; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--primary); background: rgba(139,92,246,0.08); }
+  .form-group input::placeholder { color: rgba(255,255,255,0.2); }
+  select option { background: #1a1530; }
+  .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+  .info-note { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 10px; padding: 0.9rem 1.1rem; font-size: 0.84rem; color: rgba(245,158,11,0.9); line-height: 1.6; margin-bottom: 1.5rem; display: flex; gap: 0.6rem; align-items: flex-start; }
+  .btn-submit { width: 100%; background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; border: none; border-radius: 10px; padding: 0.95rem; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 20px rgba(139,92,246,0.25); }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(139,92,246,0.35); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .success-screen { display: none; text-align: center; padding: 1rem; }
+  .success-screen.show { display: block; }
+  .form-card.hidden { display: none; }
+  .success-icon { font-size: 4rem; margin-bottom: 1.2rem; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .success-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.8rem; color: #fff; margin-bottom: 0.5rem; }
+  .success-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 2rem; }
+  .success-detail { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 2rem; text-align: left; font-size: 0.87rem; }
+  .success-detail-row { display: flex; justify-content: space-between; padding: 0.4rem 0; color: var(--muted); }
+  .success-detail-row span:last-child { color: #fff; font-weight: 500; }
+  .btn-check-status { display: inline-block; text-decoration: none; background: rgba(139,92,246,0.1); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 0.8rem 1.8rem; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; cursor: pointer; }
+  .btn-check-status:hover { border-color: var(--primary); color: var(--secondary); }
+  .toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 1.5rem; border-radius: 10px; font-size: 0.9rem; font-weight: 500; z-index: 999; transform: translateY(120px); opacity: 0; transition: all 0.3s; backdrop-filter: blur(8px); }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.error { background: rgba(239,68,68,0.9); color: #fff; }
+  footer { border-top: 1px solid var(--border); padding: 2rem 3rem; text-align: center; color: var(--muted); font-size: 0.82rem; }
+  footer span { color: var(--accent); }
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .form-group.span-2 { grid-column: span 1; } nav { padding: 1rem 1.5rem; } .page-wrap { padding: 2rem 1.5rem 4rem; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="srujana_index.html" class="nav-logo">
+    <div class="nav-logo-icon">🎨</div>
+    Srujana <span>2K26</span>
+  </a>
+  <a href="srujana_login.html" class="nav-back">← Back to Login</a>
+</nav>
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="page-icon">🎟️</div>
+    <h1>Register for an <span>Event</span></h1>
+    <p>Fill in your details and choose an event. Your request will be reviewed by the admin.</p>
+  </div>
+  <div class="form-card" id="form-card">
+    <div class="section-label"><div class="section-label-icon">👤</div>Your Details</div>
+    <div class="form-grid">
+      <div class="form-group span-2"><label>Full Name *</label><input type="text" id="r-name" placeholder="e.g. Arjun Sharma"/></div>
+      <div class="form-group span-2"><label>University Email *</label><input type="email" id="r-email" placeholder="name.course25@chanakyauniversity.edu.in"/></div>
+      <div class="form-group"><label>Contact Number</label><input type="text" id="r-phone" placeholder="10-digit mobile"/></div>
+      <div class="form-group">
+        <label>School</label>
+        <select id="r-school">
+          <option value="">Select school...</option>
+          <option>School of Arts, Humanities &amp; Social Sciences</option>
+          <option>School of Engineering</option>
+          <option>School of Management Sciences</option>
+          <option>School of Law, Governance &amp; Public Policy</option>
+          <option>School of Biosciences</option>
+          <option>School of Mathematics &amp; Natural Sciences</option>
+        </select>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-label"><div class="section-label-icon">🎭</div>Choose Event</div>
+    <div class="form-grid" style="margin-bottom:1.5rem;">
+      <div class="form-group span-2">
+        <label>Event *</label>
+        <div id="events-loading" style="color:var(--muted);font-size:0.85rem;padding:0.8rem 0">⏳ Loading events...</div>
+        <select id="r-event" style="display:none"><option value="">Select an event...</option></select>
+      </div>
+    </div>
+    <div class="info-note"><span>⚠️</span><span>Your registration request will be sent to the admin for approval. Check status anytime on the <strong>My Results</strong> page.</span></div>
+    <button class="btn-submit" id="submit-btn" onclick="submitRequest()">Submit Registration Request →</button>
+  </div>
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">Request Submitted!</div>
+    <div class="success-sub">Your registration has been sent to the admin.<br>Check status on the <strong>My Results</strong> page.</div>
+    <div class="success-detail" id="success-detail"></div>
+    <a href="srujana_student.html" class="btn-check-status" id="check-status-link">Check My Status →</a>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<footer>Srujana 2K26 — <span>Chanakya University</span> · Cultural Fest</footer>
+<script>
+const SUPA_URL = 'https://rinpqlroqxblsmjqcequ.supabase.co/rest/v1';
+const KEY = 'sb_publishable_aEFZNFjFYQ21Eyxr3oORxQ_7Tdzz13F';
+const headers = { 'apikey': KEY, 'Authorization': `Bearer ${KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' };
+const headersGet = { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` };
+const PREFIX = 'srujana_';
+
+function showToast(msg, type = 'error') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+async function loadEvents() {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const r = await fetch(`${SUPA_URL}/${PREFIX}events?select=event_id,event_name,date,venue&date=gte.${today}&order=date.asc`, { headers: headersGet });
+    const events = await r.json();
+    if (!events.length) { document.getElementById('events-loading').textContent = '📭 No upcoming events at the moment.'; return; }
+    const sel = document.getElementById('r-event');
+    events.forEach(e => {
+      const opt = document.createElement('option');
+      opt.value = e.event_id;
+      opt.textContent = `${e.event_name}${e.date ? ' · ' + e.date : ''}${e.venue ? ' · ' + e.venue : ''}`;
+      opt.dataset.name = e.event_name;
+      sel.appendChild(opt);
+    });
+    document.getElementById('events-loading').style.display = 'none';
+    sel.style.display = 'block';
+  } catch { document.getElementById('events-loading').textContent = '❌ Failed to load events.'; }
+}
+async function submitRequest() {
+  const name = document.getElementById('r-name').value.trim();
+  const email = document.getElementById('r-email').value.trim().toLowerCase();
+  const phone = document.getElementById('r-phone').value.trim();
+  const school = document.getElementById('r-school').value;
+  const eventSel = document.getElementById('r-event');
+  const eventId = eventSel.value;
+  const eventName = eventSel.options[eventSel.selectedIndex]?.dataset?.name || '';
+  if (!name) { showToast('Please enter your full name'); return; }
+  if (!email || !email.includes('@')) { showToast('Please enter a valid email'); return; }
+  if (!eventId) { showToast('Please select an event'); return; }
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+  try {
+    const res = await fetch(`${SUPA_URL}/${PREFIX}registration_requests`, { method: 'POST', headers, body: JSON.stringify({ name, email, phone, school, event_id: parseInt(eventId), event_name: eventName, status: 'pending' }) });
+    if (res.ok) {
+      document.getElementById('form-card').classList.add('hidden');
+      document.getElementById('success-screen').classList.add('show');
+      document.getElementById('success-detail').innerHTML = `<div class="success-detail-row"><span>Name</span><span>${name}</span></div><div class="success-detail-row"><span>Email</span><span>${email}</span></div><div class="success-detail-row"><span>Event</span><span>${eventName}</span></div><div class="success-detail-row"><span>Status</span><span style="color:#F59E0B">⏳ Pending Approval</span></div>`;
+      document.getElementById('check-status-link').href = `srujana_student.html?email=${encodeURIComponent(email)}`;
+    } else { showToast('❌ Failed to submit. Please try again.'); btn.disabled = false; btn.textContent = 'Submit Registration Request →'; }
+  } catch { showToast('❌ Connection error. Please try again.'); btn.disabled = false; btn.textContent = 'Submit Registration Request →'; }
+}
+loadEvents();
+</script>
+</body>
+</html>
