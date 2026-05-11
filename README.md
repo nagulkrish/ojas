@@ -4,6 +4,10 @@ A multi-fest event management web portal for **Chanakya University**, featuring 
 
 🌐 **Live Site:** [nagulkrish.github.io/Ojas_Project](https://nagulkrish.github.io/Ojas_Project/)
 
+**Admin login details**
+User Name - admin
+Password - Admin@1234
+
 ---
 
 ## 🏛️ Fests
@@ -21,7 +25,8 @@ A multi-fest event management web portal for **Chanakya University**, featuring 
 ![Landing Page](images/image1.png)
 ![Ojas 2K26 Home](images/image2.png)
 ![Events Page](images/image3.png)
-![Student Dashboard](images/image4.png)
+![Login page](images/image4.png)
+![Admin Dashboard](images/image5.png)
 
 ---
 
