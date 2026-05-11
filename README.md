@@ -1,50 +1,42 @@
-# 🎉 Chanakya University Fests Portal
+🎉 Chanakya University Fests Portal
+A multi-fest event management web portal for Chanakya University, featuring three distinct fest sub-portals — Ojas 2K26, Srujana, and Samyuti — with student registration, event browsing, dashboards, and a Python backend connected to a Supabase database.
+🌐 Live Site: nagulkrish.github.io/Ojas_Project
 
-A multi-fest event management web portal for **Chanakya University**, featuring three distinct fest sub-portals — **Ojas 2K26**, **Srujana**, and **Samyuti** — with student registration, event browsing, dashboards, and a Python backend connected to a Supabase database.
+🏛️ Fests
+FestTypeDescriptionOjas 2K26Main Event PortalThe primary university fest portalSrujanaCultural FestArts, culture, and creative eventsSamyutiInter-College FestCompetitions open to other colleges
 
-🌐 **Live Site:** [nagulkrish.github.io/Ojas_Project](https://nagulkrish.github.io/Ojas_Project/)
+📸 Screenshots
+home page.png
+Show Image
+Show Image
+Show Image
 
----
+✨ Features
 
-## 🏛️ Fests
+🎨 Animated glassmorphism landing page with smooth page transitions
+🔐 Login & Registration for each fest
+📋 Student dashboard to view registered events
+📅 Events listing page
+➕ Add-event functionality (admin)
+🗄️ Supabase (PostgreSQL) database integration
+🐍 Python backend deployed on Render
 
-| Fest | Type | Description |
-|------|------|-------------|
-| **Ojas 2K26** | Main Event Portal | The primary university fest portal |
-| **Srujana** | Cultural Fest | Arts, culture, and creative events |
-| **Samyuti** | Inter-College Fest | Competitions open to other colleges |
 
----
+🛠️ Tech Stack
+Frontend
 
-## ✨ Features
+HTML5, CSS3, Vanilla JavaScript
+Google Fonts (Inter, Playfair Display)
+Glassmorphism UI design
 
-- 🎨 Animated glassmorphism landing page with smooth page transitions
-- 🔐 Login & Registration for each fest
-- 📋 Student dashboard to view registered events
-- 📅 Events listing page
-- ➕ Add-event functionality (admin)
-- 🗄️ Supabase (PostgreSQL) database integration
-- 🐍 Python backend deployed on Render
+Backend
 
----
+Python (backend/app.py)
+Supabase (PostgreSQL) via supabase.js
+Deployed on Render
 
-## 🛠️ Tech Stack
 
-**Frontend**
-- HTML5, CSS3, Vanilla JavaScript
-- Google Fonts (Inter, Playfair Display)
-- Glassmorphism UI design
-
-**Backend**
-- Python (`backend/app.py`)
-- Supabase (PostgreSQL) via `supabase.js`
-- Deployed on [Render](https://render.com)
-
----
-
-## 📁 Project Structure
-
-```
+📁 Project Structure
 Ojas_Project/
 │
 ├── index.html                  # Landing page (fest selector)
@@ -77,87 +69,56 @@ Ojas_Project/
 │   ├── app.py                  # Python backend server
 │   └── requirements.txt
 │
+├── images/                     # README screenshot images
 ├── supabase.js                 # Supabase client config
 ├── seed_events.js              # Script to seed event data
 ├── Sql_qu.sql                  # SQL queries
 ├── render.yaml                 # Render deployment config
 └── bg.jpg / hero-bg.png        # Background images
-```
 
----
+🚀 Getting Started
+Prerequisites
 
-## 🚀 Getting Started
+Python 3.x
+A Supabase account and project
+A Render account (for deployment)
 
-### Prerequisites
-- Python 3.x
-- A [Supabase](https://supabase.com) account and project
-- A [Render](https://render.com) account (for deployment)
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/nagulkrish/Ojas_Project.git
+1. Clone the repository
+bashgit clone https://github.com/nagulkrish/Ojas_Project.git
 cd Ojas_Project
-```
-
-### 2. Set up the backend
-```bash
-pip install -r backend/requirements.txt
-```
-
-### 3. Configure environment variables
-
-Create a `.env` file or set these variables in Render:
-
-```
+2. Set up the backend
+bashpip install -r backend/requirements.txt
+3. Configure environment variables
+Create a .env file or set these in Render:
 DB_HOST=your_supabase_host
 DB_NAME=your_database_name
 DB_USER=your_database_user
 DB_PASSWORD=your_database_password
 DB_PORT=5432
-```
+4. Run the backend locally
+bashpython backend/app.py
+5. Open the frontend
+Open index.html in your browser, or serve it with:
+bashnpx serve .
 
-### 4. Run the backend locally
-```bash
-python backend/app.py
-```
+☁️ Deployment
+This project uses Render for backend hosting. The render.yaml config handles:
 
-### 5. Open the frontend
+Runtime: Python
+Build command: pip install -r backend/requirements.txt
+Start command: python backend/app.py
+Environment variables (set manually in Render dashboard)
 
-Open `index.html` in your browser, or serve it with any static file server:
-```bash
-npx serve .
-```
+The frontend is hosted via GitHub Pages.
 
----
+🗃️ Database
+The project uses Supabase (PostgreSQL). The Sql_qu.sql file contains the table definitions and queries. To seed initial event data, run:
+bashnode seed_events.js
 
-## ☁️ Deployment
+👥 Contributors
 
-This project uses **Render** for backend hosting. The `render.yaml` config handles:
-- Runtime: Python
-- Build command: `pip install -r backend/requirements.txt`
-- Start command: `python backend/app.py`
-- Environment variables (set manually in Render dashboard)
+@nagulkrish
 
-The frontend is hosted via **GitHub Pages**.
 
----
-
-## 🗃️ Database
-
-The project uses **Supabase** (PostgreSQL). The `Sql_qu.sql` file contains the table definitions and queries. To seed initial event data, run:
-
-```bash
-node seed_events.js
-```
-
----
-
-## 👥 Contributors
-
-- [@nagulkrish](https://github.com/nagulkrish)
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
+📄 License
+This project is open source and available under the MIT License.
